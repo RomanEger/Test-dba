@@ -3,10 +3,159 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:wpf_app"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Главная"
+        MinHeight="415"
+        MinWidth="550"
+        WindowState="Normal"
+        Background="Black"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        ResizeMode="CanResizeWithGrip"
+        MouseLeftButtonDown="MainWindow_OnMouseLeftButtonDown"
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <ResourceDictionary Source="Styles.xaml" />
+    </Window.Resources>
     <Grid>
-
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45"/>
+            <RowDefinition/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
+        <StackPanel
+            Grid.Column="2"
+            Margin="0 5 5 0"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <Button
+                Width="28"
+                Margin="5"
+                HorizontalAlignment="Right"
+                Content="_"
+                Click="Minimize"
+                Foreground="White"/>
+            
+            <Button
+                Width="28"
+                Margin="5"
+                HorizontalAlignment="Right"
+                Content="[]"
+                Click="ChangeState"
+                Foreground="White"/>
+            
+            <Button
+                Width="28"
+                Margin="5"
+                HorizontalAlignment="Right"
+                Content="X"
+                Click="Exit"
+                Foreground="White"/>
+            
+        </StackPanel>
+        
+        <Button 
+            Grid.Column="0"
+            Grid.Row="1"
+            Width="100"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            BorderBrush="DodgerBlue"
+            Content="Улицы"/>
+        
+        <Button 
+            Grid.Row="1"
+            Grid.Column="1"
+            Width="140"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            BorderBrush="DodgerBlue"
+            Content="Выгрузить CSV"/>
+        
+        <Button 
+            Grid.Row="1"
+            Grid.Column="2"
+            Width="100"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            BorderBrush="DodgerBlue"
+            Content="Поиск"/>
+        
+        <DataGrid 
+            Grid.ColumnSpan="3" 
+            Grid.Column="0"
+            Grid.Row="2"
+            Margin="15"
+            Background="Transparent"
+            Foreground="White"
+            AutoGenerateColumns="False"
+            IsReadOnly="True"
+            CanUserAddRows="False"
+            CanUserResizeRows="False"
+            MaxHeight="305"
+            BorderBrush="Transparent"
+            Height="auto"
+            HeadersVisibility="Column"
+            ItemsSource="{Binding Path=Abonents, IsAsync=True, UpdateSourceTrigger=PropertyChanged}"
+            >
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Width="2*"
+                    Header="ФИО"
+                    Binding="{Binding FullName, IsAsync=True}"/>
+                <DataGridTextColumn
+                    Width="2*"
+                    Header="Улица"
+                    Binding="{Binding Street, IsAsync=True}"/>
+                <DataGridTextColumn
+                    Width="*"
+                    Header="Номер дома"
+                    Binding="{Binding HouseNumber, IsAsync=True}"/>
+                <DataGridTextColumn
+                    Width="2*"
+                    Header="Номер телефона (домашний)"
+                    Binding="{Binding HousePhoneNumber, IsAsync=True}"/>
+                <DataGridTextColumn
+                    Width="2*"
+                    Header="Номер телефона (рабочий)"
+                    Binding="{Binding WorkPhoneNumber, IsAsync=True}"/>
+                <DataGridTextColumn
+                    Width="2*"
+                    Header="Номер телефона (мобильный)"
+                    Binding="{Binding PersonalPhoneNumber, IsAsync=True}"/>
+            </DataGrid.Columns>
+            
+        </DataGrid>
+        <StackPanel
+            Grid.Row="3"
+            Grid.Column="1"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Center"
+            Orientation="Horizontal">
+            <Button
+                IsEnabled="{Binding CanGoBack}"
+                FontSize="12"
+                BorderBrush="LightBlue"
+                Foreground="LightBlue"
+                Width="70"
+                Command="{Binding GoBack, IsAsync=True}"
+                Content="Назад"/>
+            <Button
+                IsEnabled="{Binding CanGoForward}"
+                FontSize="12"
+                BorderBrush="LightBlue"
+                Foreground="LightBlue"
+                Width="70"
+                Command="{Binding GoForward, IsAsync=True}"
+                Content="Вперед"/>
+        </StackPanel>
     </Grid>
 </Window>

@@ -1,6 +1,9 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using wpf_app.Repository;
+using wpf_app.Contracts;
+using wpf_app.Service;
+using wpf_app.ViewModels;
 
 namespace wpf_app;
  
@@ -15,7 +18,9 @@ public class Program
             {
                 services.AddSingleton<App>();
                 services.AddSingleton<MainWindow>();
-                services.AddScoped<IRepository>();
+                services.AddScoped<IRepository, Repository>();
+                services.AddSingleton<IConfigurationBuilder, ConfigurationBuilder>();
+                services.AddScoped<AbonentNotifyPropertyChanged>();
             })
             .Build();
         

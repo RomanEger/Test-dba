@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Главная"
-        MinHeight="415"
+        MinHeight="800"
         MinWidth="550"
         Background="Black"
         WindowStyle="None"
@@ -88,6 +88,7 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             BorderBrush="DodgerBlue"
+            Command="{Binding GenerateCsv}"
             Content="Выгрузить CSV"/>
         
         <Button 
@@ -100,51 +101,72 @@
             Command="{Binding NavToSearchByPhoneNumberPage}"
             Content="Поиск"/>
         
-        <DataGrid 
-            Grid.ColumnSpan="3" 
-            Grid.Column="0"
-            Grid.Row="2"
-            Margin="15"
-            Background="Transparent"
-            Foreground="White"
-            AutoGenerateColumns="False"
-            IsReadOnly="True"
-            CanUserAddRows="False"
-            CanUserResizeRows="False"
-            MaxHeight="305"
-            BorderBrush="Transparent"
-            Height="auto"
-            HeadersVisibility="Column"
-            ItemsSource="{Binding Path=Abonents, IsAsync=True, UpdateSourceTrigger=PropertyChanged}"
-            >
-            <DataGrid.Columns>
-                <DataGridTextColumn
-                    Width="2*"
-                    Header="ФИО"
-                    Binding="{Binding FullName, IsAsync=True}"/>
-                <DataGridTextColumn
-                    Width="2*"
-                    Header="Улица"
-                    Binding="{Binding Street, IsAsync=True}"/>
-                <DataGridTextColumn
-                    Width="*"
-                    Header="Номер дома"
-                    Binding="{Binding HouseNumber, IsAsync=True}"/>
-                <DataGridTextColumn
-                    Width="2*"
-                    Header="Номер телефона (домашний)"
-                    Binding="{Binding HousePhoneNumber, IsAsync=True}"/>
-                <DataGridTextColumn
-                    Width="2*"
-                    Header="Номер телефона (рабочий)"
-                    Binding="{Binding WorkPhoneNumber, IsAsync=True}"/>
-                <DataGridTextColumn
-                    Width="2*"
-                    Header="Номер телефона (мобильный)"
-                    Binding="{Binding PersonalPhoneNumber, IsAsync=True}"/>
-            </DataGrid.Columns>
-            
-        </DataGrid>
+        <Grid Grid.Row="2"
+              Grid.Column="0"
+              Grid.ColumnSpan="3">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="10*"/>
+            </Grid.RowDefinitions>
+            <DataGrid 
+                Grid.Row="1"
+                VerticalAlignment="Top"
+                Margin="15"
+                Background="Transparent"
+                Foreground="White"
+                AutoGenerateColumns="False"
+                IsReadOnly="True"
+                CanUserAddRows="False"
+                CanUserResizeRows="False"
+                MaxHeight="305"
+                BorderBrush="Transparent"
+                Height="auto"
+                HeadersVisibility="Column"
+                ItemsSource="{Binding Path=Abonents, IsAsync=True, UpdateSourceTrigger=PropertyChanged}"
+                >
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Width="2*"
+                        Header="ФИО"
+                        Binding="{Binding FullName, IsAsync=True}"/>
+                    <DataGridTextColumn
+                        Width="2*"
+                        Header="Улица"
+                        Binding="{Binding Street, IsAsync=True}"/>
+                    <DataGridTextColumn
+                        Width="*"
+                        Header="Номер дома"
+                        Binding="{Binding HouseNumber, IsAsync=True}"/>
+                    <DataGridTextColumn
+                        Width="2*"
+                        Header="Номер телефона (домашний)"
+                        Binding="{Binding HousePhoneNumber, IsAsync=True}"/>
+                    <DataGridTextColumn
+                        Width="2*"
+                        Header="Номер телефона (рабочий)"
+                        Binding="{Binding WorkPhoneNumber, IsAsync=True}"/>
+                    <DataGridTextColumn
+                        Width="2*"
+                        Header="Номер телефона (мобильный)"
+                        Binding="{Binding PersonalPhoneNumber, IsAsync=True}"/>
+                </DataGrid.Columns>
+                
+            </DataGrid>
+            <Button
+                HorizontalAlignment="Right"
+                Content="Фильтры X"
+                FontSize="12"
+                Foreground="Red"
+                BorderBrush="Red"
+                Height="25"
+                Width="80"
+                Margin="0 15 15 0"
+                Command="{Binding ResetFilters}"
+                Grid.Row="0">
+                
+            </Button>
+        </Grid>
+        
         <StackPanel
             Grid.Row="3"
             Grid.Column="1"

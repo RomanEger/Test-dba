@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using System.IO;
+using System.Text;
+using System.Windows;
+using Microsoft.Win32;
 using wpf_app.Contracts;
 using wpf_app.Models.DTOs;
 using wpf_app.Views;
@@ -22,10 +25,11 @@ public class MainViewModel : BaseViewModel
             {
                 await SetAbonents();
 
-                MessageBox.Show("Нет абонентов, удовлетворяющих критерию поиска",
-                    "Информация",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information);
+                if(Abonents is null || !Abonents.Any())
+                    MessageBox.Show("Нет абонентов, удовлетворяющих критерию поиска",
+                        "Информация",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
             });
 
             OnPropertyChanged();
@@ -120,4 +124,50 @@ public class MainViewModel : BaseViewModel
     public RelayCommand NavToStreetsPage => new(_ => new Streets(_repository).Show());
 
     public RelayCommand NavToSearchByPhoneNumberPage => new(_ => new SearchByPhoneNumber(this).Show());
+
+    public RelayCommand ResetFilters => new(_ =>
+    {
+        if (!string.IsNullOrWhiteSpace(PhoneNumber))
+            PhoneNumber = string.Empty;
+    });
+
+    public RelayCommand GenerateCsv => new(async _ =>
+    {
+        var sb = new StringBuilder();
+
+        var listForReport = await _repository.GetAbonents(0, int.MaxValue, _phoneNumber);
+
+        sb.AppendLine("ФИО;Улица;Номер дома;Номер телефона (домашний);Номер телефона (рабочий);Номер телефона (мобильный)");
+        
+        foreach (var item in listForReport)
+        {
+            sb.AppendLine($"{item.FullName};{item.Street};{item.HouseNumber};{item.HousePhoneNumber};{item.WorkPhoneNumber};{item.PersonalPhoneNumber}");
+        }
+
+        var dateTime = DateTime.Now;
+        
+        var folder = @"C:\Users\User";
+        var fileName = $"report_{dateTime.ToString().Replace(':', '_')}.csv";
+        OpenFileDialog();
+
+        try
+        {
+            var path = folder + @"\" + fileName;
+            File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
+            MessageBox.Show($"Файл сохранен по адресу:\n {path}");
+        }
+        catch
+        {
+            MessageBox.Show("Не удалось сохранить файл");
+        }
+        return;
+
+
+        void OpenFileDialog()
+        {
+            var openFolderDialog = new OpenFolderDialog();
+            if (openFolderDialog.ShowDialog() == true)
+                folder = openFolderDialog.FolderName;
+        }
+    });
 }

@@ -3,20 +3,22 @@ using System.Windows.Input;
 using wpf_app.Contracts;
 using wpf_app.ViewModels;
 
-namespace wpf_app;
+namespace wpf_app.Views;
 
-public partial class MainWindow : Window
+public partial class Streets : Window
 {
     private bool IsMaximized { get; set; } = false;
     
-    public MainWindow(AbonentNotifyPropertyChanged notifyPropertyChanged)
+    public Streets(IRepository repository)
     {
         InitializeComponent();
-        DataContext = notifyPropertyChanged;
+        DataContext = new StreetViewModel(repository);
     }
 
-    private void Exit(object sender, RoutedEventArgs e) => Environment.Exit(0);
-
+    private void Streets_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e) => DragMove();
+    
+    private void Close(object sender, RoutedEventArgs e) => Close();
+    
     private void ChangeState(object sender, RoutedEventArgs e)
     {
         if (IsMaximized)
@@ -32,7 +34,4 @@ public partial class MainWindow : Window
     }
 
     private void Minimize(object sender, RoutedEventArgs e) => this.WindowState = WindowState.Minimized;
-
-    private void MainWindow_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e) => DragMove();
-    
 }

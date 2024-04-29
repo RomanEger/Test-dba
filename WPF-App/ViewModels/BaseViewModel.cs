@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace wpf_app.ViewModels;
 
-public abstract class BaseNotifyPropertyChanged : INotifyPropertyChanged
+public abstract class BaseViewModel : INotifyPropertyChanged
 {
     public event PropertyChangedEventHandler PropertyChanged;
     

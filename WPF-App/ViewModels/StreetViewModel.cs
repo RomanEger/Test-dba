@@ -1,10 +1,9 @@
-﻿using System.Collections.ObjectModel;
-using wpf_app.Contracts;
+﻿using wpf_app.Contracts;
 using wpf_app.Models.DTOs;
 
 namespace wpf_app.ViewModels;
 
-public class AbonentNotifyPropertyChanged : BaseNotifyPropertyChanged
+public class StreetViewModel : BaseViewModel
 {
     private readonly IRepository _repository;
     
@@ -36,35 +35,46 @@ public class AbonentNotifyPropertyChanged : BaseNotifyPropertyChanged
     }
     
     private int CountPerPage { get; set; }
-
-    private IEnumerable<AbonentDto> _abonents = new List<AbonentDto>();
     
-    public IEnumerable<AbonentDto> Abonents
+    private IEnumerable<StreetDto> _streets = new List<StreetDto>();
+
+    public IEnumerable<StreetDto> Streets
     {
-        get => _abonents;
+        get => _streets;
         set
         {
-            _abonents = value;
+            _streets = value;
             OnPropertyChanged();
         }
     }
+
+    private string _textSearch = string.Empty;
+
+    public string TextSearch
+    {
+        get => _textSearch;
+        set
+        {
+            _textSearch = value;
+            OnPropertyChanged();
+            Task.Run(async () => SetStreets());
+        }
+    }
     
-    public AbonentNotifyPropertyChanged(IRepository repository, int countPerPage = 15)
+    public StreetViewModel(IRepository repository, int countPerPage = 15)
     {
         _repository = repository;
         CurrentPage = 0;
         CountPerPage = countPerPage;
-        Task.WhenAll(SetAbonents(), SetCount());
-    }
-
-    private async Task SetAbonents() => Abonents = await _repository.GetPart(CurrentPage, CountPerPage);
-
-    private async Task SetCount()
-    {
-        Count = await _repository.GetCount();
+        
+        Task.WhenAll(SetStreets(), SetCount());
         UpdateNavigation();
     }
 
+    private async Task SetStreets() => Streets = await _repository.GetStreets(0, CountPerPage, _textSearch);
+    
+    private async Task SetCount() => Count = await _repository.GetStreetsCount();
+    
     private void UpdateNavigation()
     {
         CanGoBack = CurrentPage > 0;
@@ -77,7 +87,7 @@ public class AbonentNotifyPropertyChanged : BaseNotifyPropertyChanged
         {
             CurrentPage++;
             UpdateNavigation();
-            await SetAbonents();
+            await SetStreets();
         }
     });
     
@@ -87,8 +97,7 @@ public class AbonentNotifyPropertyChanged : BaseNotifyPropertyChanged
         {
             CurrentPage--;
             UpdateNavigation();
-            await SetAbonents();
+            await SetStreets();
         }
     });
-
 }

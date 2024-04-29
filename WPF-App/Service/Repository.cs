@@ -10,14 +10,18 @@ namespace wpf_app.Service;
 
 public class Repository(IConfigurationBuilder configurationBuilder) : DapperBase(configurationBuilder), IRepository
 {
-    public async Task<IEnumerable<AbonentDto>> GetAbonents(int pageNumber, int count = 15)
+    public async Task<IEnumerable<AbonentDto>> GetAbonents(int pageNumber, int count = 15, string search="")
     {
         using IDbConnection dbConnection = new NpgsqlConnection(_connectionString);
         var offset = pageNumber == 0 ? 0 : pageNumber + 9;
+
+        var filter = !string.IsNullOrWhiteSpace(search) ? $"join phoneNumbers on phoneNumbers.abonentId = abonents.id where phoneNumber like '%{search}%' " : " ";
+        
         var abonents = await dbConnection.QueryAsync<AbonentDto>(
             "select Abonents.fullName, Streets.name as street, Addresses.houseNumber from Abonents " +
             "join Addresses on Abonents.id = Addresses.abonentId " +
             "join Streets on Streets.id = Addresses.streetId " +
+            $"{filter} " +
             $"limit {count} offset {offset}");
         foreach (var abonent in abonents)
         {
@@ -50,7 +54,7 @@ public class Repository(IConfigurationBuilder configurationBuilder) : DapperBase
     {
         using IDbConnection dbConnection = new NpgsqlConnection(_connectionString);
 
-        var where = string.IsNullOrWhiteSpace(search) == true ? "" : $"where name like '%{search}%'";
+        var where = !string.IsNullOrWhiteSpace(search) ? $"where name like '%{search}%'" : " ";
         
         return await dbConnection.QueryAsync<StreetDto>("select name as street, count(abonentId) as countAbonents from addresses " +
                                                  "join streets on streets.id = addresses.streetId " +

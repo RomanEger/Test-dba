@@ -12,6 +12,8 @@ public partial class Streets : Window
     public Streets(IRepository repository)
     {
         InitializeComponent();
+        TextTitle.Text = Title;
+        MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
         DataContext = new StreetViewModel(repository);
     }
 
@@ -23,15 +25,15 @@ public partial class Streets : Window
     {
         if (IsMaximized)
         {
-            this.WindowState = WindowState.Normal;
+            WindowState = WindowState.Normal;
             IsMaximized = false;
         }
         else
         {
-            this.WindowState = WindowState.Maximized;
+            WindowState = WindowState.Maximized;
             IsMaximized = true;
         }
     }
 
-    private void Minimize(object sender, RoutedEventArgs e) => this.WindowState = WindowState.Minimized;
+    private void Minimize(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
 }

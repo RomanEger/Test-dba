@@ -33,6 +33,15 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         
+        <TextBlock
+            Grid.Column="1"
+            Grid.Row="0"
+            Name="TextTitle"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontSize="18"
+            Foreground="White"/>
+        
         <StackPanel
             Grid.Column="2"
             Margin="0 5 5 0"

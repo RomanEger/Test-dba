@@ -6,11 +6,13 @@ namespace wpf_app.Views;
 
 public partial class MainWindow : Window
 {
-    private bool IsMaximized { get; set; } = false;
+    private bool IsMaximized { get; set; }
     
     public MainWindow(MainViewModel viewModel)
     {
         InitializeComponent();
+        MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
+        TextTitle.Text = Title;
         DataContext = viewModel;
     }
 
@@ -20,17 +22,17 @@ public partial class MainWindow : Window
     {
         if (IsMaximized)
         {
-            this.WindowState = WindowState.Normal;
+            WindowState = WindowState.Normal;
             IsMaximized = false;
         }
         else
         {
-            this.WindowState = WindowState.Maximized;
+            WindowState = WindowState.Maximized;
             IsMaximized = true;
         }
     }
 
-    private void Minimize(object sender, RoutedEventArgs e) => this.WindowState = WindowState.Minimized;
+    private void Minimize(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
 
     private void MainWindow_OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e) => DragMove();
     
